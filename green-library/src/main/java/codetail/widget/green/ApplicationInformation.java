@@ -14,7 +14,6 @@ public class ApplicationInformation extends DeviceInformation {
 
     @Override
     protected void onBindInformation() {
-        super.onBindInformation();
         final Context context = getContext();
 
         ApplicationInfo ai = context.getApplicationInfo();
