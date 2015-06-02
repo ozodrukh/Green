@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="configCardBackground" format="color" />
+
+    <dimen name="material_icon_offset">16dp</dimen>
+    <dimen name="configuration_widget_padding">16dp</dimen>
+    <dimen name="configuration_widget_card_elevation">4dp</dimen>
+    <dimen name="configuration_widget_card_marginTop">8dp</dimen>
+</resources>
