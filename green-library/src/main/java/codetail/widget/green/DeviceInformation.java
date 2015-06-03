@@ -16,7 +16,7 @@ public class DeviceInformation extends DualPaneLayout {
     }
 
     public void setValue(CharSequence field, CharSequence value){
-        setValue(getChildCount() / K, field, value);
+        setValue(getIndexesCount(), field, value);
     }
 
     /**
