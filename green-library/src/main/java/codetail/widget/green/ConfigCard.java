@@ -207,6 +207,8 @@ public class ConfigCard extends LinearLayout{
                 return new DeviceInformation(parent.getContext(), options);
             case "ApplicationInformationModule":
                 return new ApplicationInformation(parent.getContext(), options);
+            case "BuildConfigInformation":
+                return new BuildConfigInformation(parent.getContext(), options);
             default:
                 return parent.createView(viewType, defConfigs, options);
         }

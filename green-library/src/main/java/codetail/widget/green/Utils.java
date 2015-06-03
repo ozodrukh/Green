@@ -12,4 +12,12 @@ final class Utils {
         return (value == null) ? optional.getString(key) : value;
     }
 
+    /**
+     * Return optional value if primary is null
+     */
+    static String getString(String primary, String optional){
+        return (primary == null) ? optional : primary;
+    }
+
+
 }
