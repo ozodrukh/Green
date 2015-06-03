@@ -17,3 +17,4 @@ proguard.cfg
 .gradle
 build
 app/build
+docs

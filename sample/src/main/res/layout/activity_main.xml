@@ -18,7 +18,7 @@
         android:overScrollMode="always"
         android:elevation="12dp">
 
-        <codetail.project.watchme.widget.ConfigurationWidget
+        <codetail.widget.green.ConfigurationWidget
             android:id="@+id/ConfigWidget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
