@@ -120,11 +120,13 @@ public class ConfigCard extends LinearLayout{
      *
      * @param name Tag name to be inflated.
      * @param options Inflation attributes as specified in JSON.
+     * @param defConfigs Global configurations, if you creating configuration
+     *                   view, you should also put key with default value
      *
      * @return View Newly created view. Return null for the default
      *         behavior.
      */
-    protected View createView(String name, Bundle options){
+    protected View createView(String name, Bundle defConfigs, Bundle options){
         return null;
     }
 
@@ -157,6 +159,7 @@ public class ConfigCard extends LinearLayout{
             reader.beginArray();
             while(reader.peek() != JsonToken.END_ARRAY){
                 appendViewInLayout(createView(this, widget.getConfigurations(), options, reader));
+                options.clear(); // recycle configurations
             }
             reader.endArray();
         }else{
@@ -204,7 +207,7 @@ public class ConfigCard extends LinearLayout{
             case "ApplicationInformationModule":
                 return new ApplicationInformation(parent.getContext(), options);
             default:
-                return parent.createView(viewType, options);
+                return parent.createView(viewType, defConfigs, options);
         }
     }
 
@@ -321,13 +324,13 @@ public class ConfigCard extends LinearLayout{
             layout.setRatio(3, 2);
         }
 
-        final int index = layout.getChildCount() / 2;
+        final int index = layout.getIndexesCount();
         layout.inflateIfNeeded(index, R.layout.config_textview, R.layout.config_checkbox);
 
-        final TextView title = (TextView) layout.getChildAt(2 * index);
+        final TextView title = (TextView) layout.getChildAt(DualPaneLayout.K * index);
         title.setText(options.getString("title"));
 
-        final CheckBox radioButton = (CheckBox) layout.getChildAt(2 * index + 1);
+        final CheckBox radioButton = (CheckBox) layout.getChildAt(DualPaneLayout.K * index + 1);
         radioButton.setChecked(defValue);
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
