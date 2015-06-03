@@ -76,8 +76,15 @@ public class DualPaneLayout extends ViewGroup{
     }
 
     /**
-     * Gets TextViews on {@code index}, if there is no views
-     * on index inflates new one, and binds passed data
+     * Returns rows count in the layout
+     */
+    public int getIndexesCount(){
+        return getChildCount() / K;
+    }
+
+    /**
+     * if {@code index} equals {@link #getIndexesCount()}, it means that it wants
+     * add new row and we will inflate them, otherwise do nothing
      *
      * Note, newly inflated views are preventing {@link #requestLayout()}
      * so after batch setting you need to invoke it
@@ -90,9 +97,9 @@ public class DualPaneLayout extends ViewGroup{
             throw new IllegalArgumentException("Cannot inflate more than " + K + " views");
         }
 
-        if(K * index >= getChildCount()){
+        if(index == getIndexesCount()){
             LayoutInflater factory = LayoutInflater.from(getContext());
-            for(int i = 0; i < id.length; index++){
+            for(int i = 0; i < K; i++){
                 View child = factory.inflate(id[i], this, false);
                 addViewInLayout(child, getChildCount(), child.getLayoutParams(), true);
             }
