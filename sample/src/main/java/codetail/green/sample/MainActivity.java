@@ -13,8 +13,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ConfigurationWidget widget = (ConfigurationWidget) findViewById(R.id.ConfigWidget);
-        if(savedInstanceState == null) {
-            widget.setConfigurations(R.raw.config_file_sample_base);
-        }
+        widget.setConfigurations(R.raw.config_file_sample_base, savedInstanceState != null);
     }
 }

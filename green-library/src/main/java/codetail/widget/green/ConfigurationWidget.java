@@ -26,6 +26,8 @@ public class ConfigurationWidget extends LinearLayout{
 
     private JsonMenuInflater mInflater;
     private Bundle mConfigurations;
+    private boolean mRestoreState;
+    private String mConfigurationJson;
     private List<OnConfigurationChange> mConfigChangeListeners;
 
     public ConfigurationWidget(Context context) {
@@ -116,16 +118,21 @@ public class ConfigurationWidget extends LinearLayout{
         return color;
     }
 
-    public final void setConfigurations(String json){
+    public final void setConfigurations(String json, boolean restoreState){
         if(TextUtils.isEmpty(json)){
             return;
         }
 
-        render(json);
+        mRestoreState = restoreState;
+        mConfigurationJson = json;
+
+        if(!restoreState) {
+            render(json);
+        }
     }
 
-    public final void setConfigurations(@RawRes int id){
-        setConfigurations(getRaw(id));
+    public final void setConfigurations(@RawRes int id, boolean restoreState){
+        setConfigurations(getRaw(id), restoreState);
     }
 
     /**
@@ -174,7 +181,7 @@ public class ConfigurationWidget extends LinearLayout{
     @Override
     protected Parcelable onSaveInstanceState() {
         ConfigState state = new ConfigState(super.onSaveInstanceState());
-        state.mConfigs = mConfigurations;
+        state.mConfigs = getConfigurations();
         return state;
     }
 
@@ -183,6 +190,10 @@ public class ConfigurationWidget extends LinearLayout{
         ConfigState s = (ConfigState) state;
         mConfigurations = s.mConfigs;
         super.onRestoreInstanceState(s.getSuperState());
+
+        if(mRestoreState){
+            render(mConfigurationJson);
+        }
     }
 
     static class ConfigState extends BaseSavedState{

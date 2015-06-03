@@ -152,13 +152,14 @@ public class ConfigCard extends LinearLayout{
      */
     protected void inflate(ConfigurationWidget widget, JsonReader reader) throws IOException {
         Bundle options = new Bundle();
+        Bundle configs = widget.getConfigurations();
         JsonToken token = reader.peek();
         if(token == JsonToken.BEGIN_OBJECT){
-            appendViewInLayout(createView(this, widget.getConfigurations(), options, reader));
+            appendViewInLayout(createView(this, configs, options, reader));
         }else if (token == JsonToken.BEGIN_ARRAY){
             reader.beginArray();
             while(reader.peek() != JsonToken.END_ARRAY){
-                appendViewInLayout(createView(this, widget.getConfigurations(), options, reader));
+                appendViewInLayout(createView(this, configs, options, reader));
                 options.clear(); // recycle configurations
             }
             reader.endArray();
@@ -262,12 +263,14 @@ public class ConfigCard extends LinearLayout{
 
         // Register config key & default value
         final String key = options.getString("key");
-        defConfigs.putString(key, null);
+        final String value = Utils.getString("value", defConfigs, options);
+        defConfigs.putString(key, value);
 
         EditText editText = (EditText) LayoutInflater.from(context)
                 .inflate(R.layout.config_edittext, parent, false);
         editText.setHint(options.getString("hint"));
-        editText.setText(options.getString("value"));
+        editText.setText(value);
+        editText.setFreezesText(true);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -290,7 +293,7 @@ public class ConfigCard extends LinearLayout{
 
         // Register config key & default value
         final String key = options.getString("key");
-        final int selected = options.getInt("value", 0);
+        final int selected = defConfigs.getInt(key, options.getInt("value", 0));
         defConfigs.putString(key, adapter.getItem(selected));
 
         Spinner spinner = (Spinner) LayoutInflater.from(context)
@@ -300,7 +303,7 @@ public class ConfigCard extends LinearLayout{
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> av, View view, int position, long id) {
-                defConfigs.putString(key, adapter.getItem(position));
+                defConfigs.putInt(key, position);
                 parent.notifyConfigChanged(key);
             }
 
@@ -314,8 +317,14 @@ public class ConfigCard extends LinearLayout{
 
     private static View createCheckBox(final ConfigCard parent, final Bundle defConfigs, final Bundle options){
         final String key = options.getString("key");
-        final boolean defValue = options.getBoolean("value");
-        defConfigs.putBoolean(key, defValue);
+        final boolean defValue;
+
+        if(defConfigs.containsKey(key)){
+            defValue = defConfigs.getBoolean(key);
+        }else{
+            defValue = options.getBoolean("value");
+            defConfigs.putBoolean(key, defValue);
+        }
 
         DualPaneLayout layout = findDualPanelLayout(parent);
         final boolean hasLayout = layout != null;
