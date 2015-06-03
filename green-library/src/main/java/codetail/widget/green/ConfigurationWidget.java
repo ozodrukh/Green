@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.RawRes;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -166,5 +169,51 @@ public class ConfigurationWidget extends LinearLayout{
             e.printStackTrace();
         }
         return builder.toString();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        ConfigState state = new ConfigState(super.onSaveInstanceState());
+        state.mConfigs = mConfigurations;
+        return state;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        ConfigState s = (ConfigState) state;
+        mConfigurations = s.mConfigs;
+        super.onRestoreInstanceState(s.getSuperState());
+    }
+
+    static class ConfigState extends BaseSavedState{
+
+        Bundle mConfigs;
+
+        ConfigState(Parcel source) {
+            super(source);
+            mConfigs = source.readBundle();
+        }
+
+        private ConfigState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeBundle(mConfigs);
+        }
+
+        public static final Creator<ConfigState> CREATOR = new Creator<ConfigState>() {
+            @Override
+            public ConfigState createFromParcel(Parcel in) {
+                return new ConfigState(in);
+            }
+
+            @Override
+            public ConfigState[] newArray(int size) {
+                return new ConfigState[size];
+            }
+        };
     }
 }
