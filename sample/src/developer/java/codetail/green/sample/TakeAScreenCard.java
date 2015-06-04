@@ -56,6 +56,13 @@ public class TakeAScreenCard extends ConfigCard {
 
     @Override
     protected void inflate(ConfigurationWidget widget, JsonReader reader) throws IOException {
+        /**
+         * We doesn't need any extra views or even options,
+         * it will be just Screenshot button (may be later something more),
+         * so we skip json object
+         *
+         * without skiping value further parsing will be crashed with application
+         */
         reader.skipValue();
     }
 }
