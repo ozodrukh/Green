@@ -238,6 +238,7 @@ public class ConfigCard extends LinearLayout{
             }
             reader.endObject();
         } catch (IOException e) {
+            Log.w(TAG, "on >>> " + reader.toString());
             e.printStackTrace();
         }
         return options;
