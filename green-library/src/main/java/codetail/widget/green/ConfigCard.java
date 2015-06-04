@@ -203,6 +203,8 @@ public class ConfigCard extends LinearLayout{
                 return createEditText(parent, defConfigs, options);
             case "CheckBox":
                 return createCheckBox(parent, defConfigs, options);
+            case "NetworkInformation":
+                return new NetworkInformation(parent.getContext(), options);
             case "DeviceInformationModule":
                 return new DeviceInformation(parent.getContext(), options);
             case "ApplicationInformationModule":

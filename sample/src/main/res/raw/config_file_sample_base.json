@@ -23,6 +23,20 @@
       "hint": "Endpoint url"
     }
   ],
+
+  "Network Information":{
+    "type": "NetworkInformation",
+    "show_flag": "only_active_network",
+
+    "comment": "(1000ms = 1s) * 10 = 10s"
+  },
+
+  "Traffic Stats":{
+    "type": "NetworkInformation",
+    "update_delay": 5000,
+    "show_flag": "only_traffic_stats"
+  },
+
   "Network Module":[
     {
       "type": "CheckBox",
