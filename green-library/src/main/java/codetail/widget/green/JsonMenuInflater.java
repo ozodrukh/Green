@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.JsonToken;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 public class JsonMenuInflater{
+    private static final String TAG = "JsonMenuInflater";
 
     private static final Class<?>[] sConstructorSignature = new Class[] {Context.class};
     private static final HashMap<String, Constructor<? extends ConfigCard>> sConstructorMap = new HashMap<>();
@@ -67,13 +69,18 @@ public class JsonMenuInflater{
                 String title = jReader.nextName();
                 String className = null;
                 if(jReader.peek() == JsonToken.STRING){
-                    className = jReader.nextString();
+                    if(title.equalsIgnoreCase("class")) {
+                        className = jReader.nextString();
+                        title = jReader.nextName();
+                    }else{
+                        throw new RuntimeException("Invalid json " + jReader.toString());
+                    }
                 }
                 mConfigurationWidget.addWidget(create(mConfigurationWidget, className, title, jReader));
             }
             jReader.endObject();
         } catch (IOException e) {
-            throw new IllegalStateException("JSON Configuration root should be object");
+            e.printStackTrace();
         }finally {
             try {
                 jReader.close();
@@ -97,6 +104,10 @@ public class JsonMenuInflater{
     @SuppressWarnings("unchecked")
     protected ConfigCard create(ConfigurationWidget parent, String className,
                                 String title, JsonReader reader) throws IOException {
+        if(BuildConfig.DEBUG) {
+            Log.i(TAG, ">>> Creating " + (className == null ? "ConfigCard" : className));
+        }
+
         ConfigCard widget = null;
         if(TextUtils.isEmpty(className)){
             widget = new ConfigCard(getContext());;
@@ -105,11 +116,11 @@ public class JsonMenuInflater{
                 Constructor<? extends ConfigCard> constructor = sConstructorMap.get(className);
                 if(constructor == null){
                     constructor = (Constructor<? extends ConfigCard>)
-                            Class.forName(className)
-                                    .getConstructor(sConstructorSignature);
+                            Class.forName(className).getConstructor(sConstructorSignature);
                     constructor.setAccessible(true);
                     sConstructorMap.put(className, constructor);
                 }
+
                 widget = constructor.newInstance(parent.getContext());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -125,7 +136,7 @@ public class JsonMenuInflater{
         }
 
         if(widget == null){
-            throw new IllegalArgumentException("Unable to create custom ConfigCard >>>" + className);
+            throw new IllegalArgumentException("Unable to create custom ConfigCard >>> " + className);
         }
 
         widget.setTitle(title);
