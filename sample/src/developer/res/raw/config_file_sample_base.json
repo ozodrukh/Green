@@ -1,6 +1,7 @@
 {
   "Application Information": {
-    "type": "BuildConfigInformation"
+    "type": "BuildConfigInformation",
+    "object": "codetail.green.sample.BuildConfig"
   },
 
   "Device Information": {
@@ -49,5 +50,8 @@
       "title": "Logging",
       "value": true
     }
-  ]
+  ],
+
+  "class": "codetail.green.sample.TakeAScreenCard",
+  "Utils":{}
 }
