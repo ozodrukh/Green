@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ApplicationTheme" parent="Theme.AppCompat.Light">
-        <item name="configCardBackground">@color/cardview_light_background</item>
+
     </style>
 
 </resources>
