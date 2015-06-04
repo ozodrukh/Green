@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ApplicationTheme" parent="Theme.AppCompat.Light">
+        <item name="configCardBackground">@color/cardview_light_background</item>
+    </style>
+
+</resources>

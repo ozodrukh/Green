@@ -13,10 +13,11 @@ android {
     buildTypes {
         developer {
             minifyEnabled false
-            applicationIdSuffix ".dev"
+            applicationIdSuffix '.dev'
         }
     }
     productFlavors {
+
     }
     signingConfigs {
         debug {
@@ -33,5 +34,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:design:22.2.0'
     developerCompile project(':green-library')
-    //compile 'com.google.code.gson:gson:2.3'
 }
