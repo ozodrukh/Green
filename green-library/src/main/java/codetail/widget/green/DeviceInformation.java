@@ -40,6 +40,29 @@ public class DeviceInformation extends DualPaneLayout {
         valueView.setText(value);
     }
 
+    public void setHeading(CharSequence field){
+        setHeading(getIndexesCount(), field);
+    }
+
+    /**
+     * First inflated textview will be inflated and marked as heading,
+     * it means it will fill full horizontal space
+     *
+     * @param index index of element to rebind
+     * @param field fieldName on the left pane
+     */
+    public void setHeading(int index, CharSequence field){
+        inflateIfNeeded(index, R.layout.config_textview, R.layout.config_textview);
+
+        TextView fieldView = (TextView) getChildAt(K * index);
+        fieldView.setText(field);
+        LayoutParams params = (LayoutParams) fieldView.getLayoutParams();
+        params.heading = true;
+
+        TextView valueView = (TextView) getChildAt(K * index + 1);
+        valueView.setText(null);
+    }
+
     /**
      * Bind all information, after batch adding
      * {@link #requestLayout()} & {@link #invalidate()}
@@ -49,13 +72,14 @@ public class DeviceInformation extends DualPaneLayout {
      */
     protected void onBindInformation(){
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        setValue("Brand", Build.BRAND);
+        setValue("Make", Build.MANUFACTURER);
         setValue("Model", Build.MODEL);
         setValue("Device", Build.DEVICE);
         setValue("Display", Build.DISPLAY);
-        setValue("Resolution", getDensityString(dm));
+        setValue("Resolution", dm.heightPixels + "x" + dm.widthPixels);
         setValue("Density", dm.densityDpi + "dpi (" + getDensityString(dm) + ")");
-        setValue("Android", Build.VERSION.CODENAME + " (" + Build.VERSION.SDK_INT + ")");
+        setValue("Release",  Build.VERSION.RELEASE);
+        setValue("API",  String.valueOf(Build.VERSION.SDK_INT));
     }
 
     @Override

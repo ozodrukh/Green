@@ -2,9 +2,13 @@ package codetail.widget.green;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +31,9 @@ public class NetworkInformation extends ApplicationInformation{
     public static final int SHOW_ONLY_TRAFFIC_STATS = "only_traffic_stats".hashCode();
     public static final int SHOW_ALL = "all".hashCode();
 
+    private static final Object HEADING = new RelativeSizeSpan(1.1f);
+    private static final Object SUBHEADING = new RelativeSizeSpan(1.05f);
+    private static final Object BOLD = new StyleSpan(Typeface.BOLD);
     private static final long DEFAULT_UPDATE_PERIOD = TimeUnit.MINUTES.toMillis(10);
 
     private int mFlag;
@@ -64,6 +71,10 @@ public class NetworkInformation extends ApplicationInformation{
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
+    public void setUpdateDelay(long ms){
+        mUpdateDelay = ms;
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -99,15 +110,42 @@ public class NetworkInformation extends ApplicationInformation{
 
     protected void createTrafficStats(){
         final int uid = android.os.Process.myUid();
-        setTrafficValue("Bytes sent", getUidTxBytes(uid));
-        setTrafficValue("Bytes received", getUidRxBytes(uid));
-        setTrafficValue("Packets sent", getUidTxPackets(uid));
-        setTrafficValue("Packets received", getUidRxPackets(uid));
+        setSubHeading("Application Bytes: ");
 
-        setTrafficValue("Total Bytes sent", getTotalTxBytes());
-        setTrafficValue("Total Bytes received", getTotalRxBytes());
-        setTrafficValue("Total Packets sent", getTotalTxPackets());
-        setTrafficValue("Total Packets received", getTotalRxPackets());
+        setTrafficValue("\tsent", getUidTxBytes(uid));
+        setTrafficValue("\treceived", getUidRxBytes(uid));
+
+        setSubHeading("Application Packets: ");
+        setTrafficValue("\tsent", getUidTxPackets(uid));
+        setTrafficValue("\treceived", getUidRxPackets(uid));
+
+        setSubHeading("Total Bytes: ");
+
+        setTrafficValue("\tsent", getTotalTxBytes());
+        setTrafficValue("\treceived", getTotalRxBytes());
+
+        setSubHeading("Total Packets: ");
+        setTrafficValue("\tsent", getTotalTxPackets());
+        setTrafficValue("\treceived", getTotalRxPackets());
+    }
+
+    @Override
+    public void setHeading(CharSequence string){
+        SpannableString heading = new SpannableString(string);
+        heading.setSpan(HEADING, 0, string.length(), 0);
+        super.setHeading(heading);
+    }
+
+    public void setSubHeading(CharSequence string){
+        SpannableString heading = new SpannableString(string);
+        heading.setSpan(SUBHEADING, 0, string.length(), 0);
+        super.setHeading(heading);
+    }
+
+    public void setSubHeading(CharSequence string, String value){
+        SpannableString heading = new SpannableString(string);
+        heading.setSpan(SUBHEADING, 0, string.length(), 0);
+        setValue(heading, value);
     }
 
     public void setTrafficValue(CharSequence field, long value) {
@@ -126,7 +164,7 @@ public class NetworkInformation extends ApplicationInformation{
         boolean granted = true;
         if(context.checkCallingOrSelfPermission(ACCESS_NETWORK_STATE) != PERMISSION_GRANTED){
             granted = false;
-            setValue("Network", "network state is unavailable, add permission to the manifest");
+            setHeading("Network state is unavailable, add permission to the manifest");
         }
         return granted;
     }
@@ -134,7 +172,7 @@ public class NetworkInformation extends ApplicationInformation{
     private void createActiveNetworkInformation(){
         NetworkInfo ni = mConnectivityManager.getActiveNetworkInfo();
         if(ni == null) {
-            setValue("Active Network", "No active networks");
+            setHeading("No active networks");
         }else {
             setValue("Network type", ni.getTypeName() + "[" + ni.getType() + "]");
             setValue("Network subtype", ni.getSubtypeName() + "[" + ni.getSubtype() + "]");

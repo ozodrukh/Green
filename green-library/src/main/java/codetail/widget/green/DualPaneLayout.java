@@ -19,7 +19,7 @@ public class DualPaneLayout extends ViewGroup{
     /**
      * Number of panes, kn + 1
      */
-    static final int K = 2;
+    public static final int K = 2;
 
     private int firstPaneWeight;
     private int secondPaneWeight;
@@ -43,11 +43,16 @@ public class DualPaneLayout extends ViewGroup{
             View child1 = getChildAt(K * index);
             View child2 = getChildAt(K * index + 1);
 
-            int propW = width / (firstPaneWeight + secondPaneWeight);
-            measureChildWithMargins(child1, widthMeasureSpec, (propW * secondPaneWeight),
-                    heightMeasureSpec, heightUsed);
-            measureChildWithMargins(child2, widthMeasureSpec, (propW * firstPaneWeight) + offsetRight,
-                    heightMeasureSpec, heightUsed);
+            LayoutParams params = (LayoutParams) child1.getLayoutParams();
+            if(params.heading){
+                measureChildWithMargins(child1, widthMeasureSpec, 0, heightMeasureSpec, heightUsed);
+            }else {
+                int propW = width / (firstPaneWeight + secondPaneWeight);
+                measureChildWithMargins(child1, widthMeasureSpec,
+                        (propW * secondPaneWeight), heightMeasureSpec, heightUsed);
+                measureChildWithMargins(child2, widthMeasureSpec,
+                        (propW * firstPaneWeight) + offsetRight, heightMeasureSpec, heightUsed);
+            }
 
             heightUsed += Math.max(child1.getMeasuredHeight(), child2.getMeasuredHeight());
         }
@@ -65,11 +70,17 @@ public class DualPaneLayout extends ViewGroup{
             View child1 = getChildAt(K * index);
             View child2 = getChildAt(K * index + 1);
 
-            int c1width = child1.getMeasuredWidth();;
-            child1.layout(0, contentTop, c1width, contentTop + child1.getMeasuredHeight());
-            c1width += offsetRight;
-            child2.layout(c1width, contentTop, c1width + child2.getMeasuredWidth(),
-                    contentTop + child2.getMeasuredHeight());
+            LayoutParams params = (LayoutParams) child1.getLayoutParams();
+            if(params.heading){
+                child1.layout(0, contentTop, child1.getMeasuredWidth(),
+                        contentTop + child1.getMeasuredHeight());
+            }else {
+                int c1width = child1.getMeasuredWidth();
+                child1.layout(0, contentTop, c1width, contentTop + child1.getMeasuredHeight());
+                c1width += offsetRight;
+                child2.layout(c1width, contentTop, c1width + child2.getMeasuredWidth(),
+                        contentTop + child2.getMeasuredHeight());
+            }
 
             contentTop += Math.max(child1.getMeasuredHeight(), child2.getMeasuredHeight());
         }
@@ -107,17 +118,43 @@ public class DualPaneLayout extends ViewGroup{
     }
 
     @Override
-    protected LayoutParams generateLayoutParams(LayoutParams p) {
-        return new MarginLayoutParams(p);
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return super.checkLayoutParams(p) && p instanceof LayoutParams;
+    }
+
+    @Override
+    protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return new LayoutParams(p);
     }
 
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new MarginLayoutParams(getContext(), attrs);
+        return new LayoutParams(getContext(), attrs);
     }
 
     @Override
     protected LayoutParams generateDefaultLayoutParams() {
-        return new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    }
+
+    static class LayoutParams extends MarginLayoutParams{
+
+        boolean heading = false;
+
+        public LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        public LayoutParams(int width, int height) {
+            super(width, height);
+        }
+
+        public LayoutParams(MarginLayoutParams source) {
+            super(source);
+        }
+
+        public LayoutParams(ViewGroup.LayoutParams source) {
+            super(source);
+        }
     }
 }
