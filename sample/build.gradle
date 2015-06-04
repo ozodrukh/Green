@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        debug {
-            keyAlias 'debug'
-            keyPassword '123456'
-            storeFile file('/Users/Ozodrukh/Documents/Android/projects/Green/sample/debug.jks')
-            storePassword '123456'
-        }
-    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
@@ -25,6 +17,14 @@ android {
         }
     }
     productFlavors {
+    }
+    signingConfigs {
+        debug {
+            keyAlias 'debug'
+            keyPassword '123456'
+            storeFile file('/Users/Ozodrukh/Documents/Android/projects/Green/sample/debug.jks')
+            storePassword '123456'
+        }
     }
 }
 
