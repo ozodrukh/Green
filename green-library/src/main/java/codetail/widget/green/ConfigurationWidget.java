@@ -74,7 +74,7 @@ public class ConfigurationWidget extends LinearLayout{
             final int length = mConfigChangeListeners.size();
             for(int index = 0; index < length; index++){
                 OnConfigurationChange listener = mConfigChangeListeners.get(index);
-                listener.onChange(widget, key, mConfigurations);
+                listener.onChanged(widget, key, mConfigurations);
             }
         }
     }
@@ -157,7 +157,7 @@ public class ConfigurationWidget extends LinearLayout{
          * @param key Changed configuration item key
          * @param newConfig Configurations map
          */
-        void onChange(ConfigCard widget, String key, Bundle newConfig);
+        void onChanged(ConfigCard widget, String key, Bundle newConfig);
     }
 
     /**

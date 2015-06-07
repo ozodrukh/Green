@@ -1,13 +1,14 @@
 {
   "Application Information": {
-    "type": "BuildConfigInformation"
+    "type": "BuildConfigInformation",
+    "object": "codetail.green.sample.BuildConfig"
   },
 
   "Device Information": {
     "type": "DeviceInformationModule"
   },
 
-  "Example Module":[
+  "API Module":[
     {
       "key": "productFlavor",
       "type": "Spinner",
@@ -26,9 +27,7 @@
 
   "Network Information":{
     "type": "NetworkInformation",
-    "show_flag": "only_active_network",
-
-    "comment": "(1000ms = 1s) * 10 = 10s"
+    "show_flag": "only_active_network"
   },
 
   "Traffic Stats":{
@@ -37,17 +36,26 @@
     "show_flag": "only_traffic_stats"
   },
 
-  "Network Module":[
+  "class": "codetail.green.sample.cards.PicassoCard",
+  "Picasso":[
     {
-      "type": "CheckBox",
-      "key": "network-status",
-      "title": "Network status",
-      "value": true
+      "type": "CustomCheckBox",
+      "key": "indicators_enabled",
+      "title": "Indicators",
+      "value": false
     },
     {
-      "type": "CheckBox",
-      "key": "mobile-status",
-      "title": "Mobile status"
+      "type": "CustomCheckBox",
+      "key": "logging_enabled",
+      "title": "Logging",
+      "value": true
     }
-  ]
+  ],
+
+
+  "class": "codetail.green.sample.cards.OrigamiCard",
+  "Origami":{},
+
+  "class": "codetail.green.sample.cards.TakeAScreenCard",
+  "Utils":{}
 }

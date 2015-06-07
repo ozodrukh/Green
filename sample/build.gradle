@@ -11,7 +11,7 @@ android {
         signingConfig signingConfigs.debug
     }
     buildTypes {
-        developer {
+        debug {
             minifyEnabled false
             applicationIdSuffix '.dev'
         }
@@ -23,7 +23,7 @@ android {
         debug {
             keyAlias 'debug'
             keyPassword '123456'
-            storeFile file('/Users/Ozodrukh/Documents/Android/projects/Green/sample/debug.jks')
+            storeFile file('debug.jks')
             storePassword '123456'
         }
     }
@@ -34,5 +34,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:design:22.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    developerCompile project(':green-library')
+    compile 'com.facebook.rebound:rebound:0.3.8'
+    compile project(':green-library')
 }
